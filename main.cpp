@@ -12,6 +12,8 @@ int main() {
     RungeKutta4thMethodRotor* rkmr = new RungeKutta4thMethodRotor(new Afun2);
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
+    Biv B(1,1,1);
+    cout<<B.norm()<<endl;
 
     int N = 40000;
     double dt=1E-12;
