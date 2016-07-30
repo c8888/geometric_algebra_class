@@ -8,7 +8,10 @@ using namespace std;
 using namespace vsr::ega;
 
 int main() {
-    EulerMethodRotor* emr = new EulerMethodRotor(new Afun1); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
+    EulerMethodRotor* euler = new EulerMethodRotor(new Afun1); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
+    EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun1);
+    EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun1);
+    EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun1);
     RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun1);
     RodriguesFormula* rodr = new RodriguesFormula(new Afun1);
     AdamsMulton* Adm = new AdamsMulton(new Afun1);
@@ -44,8 +47,19 @@ int main() {
     double dtmax = 1E-8;
     double logarithm_base = 1.1; //increment od dt for next step, i.e. dt *= logarithm_base
 
-    emr->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
-    emr->saveError("Error2eulerConst.dat");
+    euler->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    euler->saveError("Error2eulerConst.dat");
+
+    emr1->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr1->saveError("Error2euler1Const.dat");
+
+    emr2->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr2->saveError("Error2euler2Const.dat");
+
+
+    emr3->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr3->saveError("Error2euler3Const.dat");
+
 
     runge->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     runge->saveError("Error2rungeConst.dat");
@@ -55,7 +69,7 @@ int main() {
 
     Adm->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     Adm->saveError("Error2adamsConst.dat");
-    
+
 
     return 0;
 }
