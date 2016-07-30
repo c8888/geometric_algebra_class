@@ -14,6 +14,9 @@ int main() {
 
     Biv B(1,1,1);
     cout<<B.norm()<<endl;
+    Rot RRRRR;
+    RRRRR = Rot(1,2,3,4);
+    Rot YYYY(1,2,1,1);
 
     int N = 40000;
     double dt=1E-12;
