@@ -23,21 +23,18 @@ Rot Afun1::exactSol(double t, vsr::ega::Rot R0){
     const double gamma = 2.675E8;
     Pss I(1);
     Vec B(0,gamma,0);
-    Rot Rtmp = Sca(cos((I*B*t).norm())) + (I*B*t)*(1/(I*B*t).norm())*sin((I*B*t).norm()); //THIS MEANS INITIAL ROTOR SHOULD ALWAYS BE (1,0,0,0) FOR THIS METHOD
+    Rot Rtmp = Sca(cos((I*B*t).norm())) + (I*B*t)*(1/(I*B*t).norm())*sin((I*B*t).norm());
     return Rtmp;
 }
 
 Biv Afun2::value(double t) {
-    const double gamma = 2.675E8;
-    Pss I(1);
-    Vec B(0, gamma, 0);
-    return B*I;
+    return Sca(gamma/2.)*Vec(B1*cos(w*t),B1*sin(w*t),B0)*Pss(1);
 }
 
 Rot Afun2::exactSol(double t, vsr::ega::Rot R0){
-    const double gamma = 2.675E8;
-    Pss I(1);
-    Vec B(0,gamma,0);
-    Rot Rtmp = Sca(cos((I*B*t).norm())) + (I*B*t)*(1/(I*B*t).norm())*sin((I*B*t).norm());
-    return Rtmp;
+    Rot Rext1 = Sca(cos(-t*w/2))+Vec(0,0,1)*Pss(1)*Sca(sin(-t*w/2));
+    Biv P = Sca(0.5*t)*Vec(gamma*B1,0,(gamma*B0+w))*Pss(1);
+    Rot Rext2 = Sca(cos(P.norm()))+P*Sca(sin(P.norm())/P.norm());
+    return Rext1*Rext2;
 }
+

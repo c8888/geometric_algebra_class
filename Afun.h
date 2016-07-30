@@ -26,7 +26,12 @@ class Afun2: public Afun {
 public:
     vsr::ega::Biv value(double t);
     vsr::ega::Rot exactSol (double t, vsr::ega::Rot R0);
+private:
+    const double B0 = 1;
+    const double B1 = 1;
+    const double gamma = 1;
+    const double w = 1;
+    vsr::ega::Pss I = vsr::ega::Pss(1);
 };
-
 
 #endif //GEOMETRIC_ALGEBRA_CLASSES_BFUN_H

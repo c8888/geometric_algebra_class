@@ -26,7 +26,7 @@ public:
 
     virtual void calc(double dt, int N,  vsr::ega::Vec S0T, vsr::ega::Rot R0T) = 0; //erase data, fill data with new solution, change time
     void calcError1(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //max(abs(1-|s|)), adds pairs of dt and error measurement into data d
-    void calcError2(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //angle between S and S_exact
+    void calcError2(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //cos(angle between S and S_exact)
     void timing(); //returns last execution time and N
     void push_back(std::pair< double, std::pair<vsr::ega::Vec, vsr::ega::Rot> > ); //add t,S,R with this
     void push_back(std::pair<double, double>); //add error with this
