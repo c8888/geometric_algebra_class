@@ -17,6 +17,7 @@ int main() {
     Rot RRRRR;
     RRRRR = Rot(1,2,3,4);
     Rot YYYY(1,2,1,1);
+    Rot jjjj;
 
     int N = 40000;
     double dt=1E-12;
