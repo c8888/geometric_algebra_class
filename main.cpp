@@ -13,6 +13,7 @@ int main() {
     RodriguesFormula* rodrConst = new RodriguesFormula(new Afun1);
     RodriguesFormula* rodrNMR = new RodriguesFormula(new Afun2);
     AdamsMulton* AdmConst = new AdamsMulton(new Afun1);
+    AdamsMulton* AdmConst2 = new AdamsMulton(new Afun2);
 
 
     //CALCULATE THE ROTOR AND SPIN IN TIME
