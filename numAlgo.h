@@ -45,12 +45,17 @@ public:
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
-//class RodriguesFormula: public EQ {
-//    public:
-//        EulerMethodRotorRescaling1(Afun* Af): EQ(Af){}
-//        void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
-//};
+class RodriguesFormula: public EQ {
+public:
+    RodriguesFormula(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
+class AdamsMulton: public EQ {
+public:
+    AdamsMulton(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
 
 
