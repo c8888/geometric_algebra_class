@@ -181,7 +181,7 @@ void AdamsMulton::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
 
     for(int i=4; i<N; i++) {
         R = Rk + Sca(dt/24.)*(Sca(55.)*A->value((i-1)*dt)*Rk - Sca(59.)*A->value((i-2)*dt)*Rk_1 + Sca(37.)*A->value((i-3)*dt)*Rk_2 - Sca(9.)*A->value((i-4)*dt)*Rk_3);
-        R = Rk + Sca(dt/24.)*(Sca(9.)*A->value((i)*dt)*R) + Sca(19.)*A->value((i-1)*dt)*Rk - Sca(5.)*A->value((i-2)*dt)*Rk_1 + A->value((i-3)*dt)*Rk_2;
+        R = Rk + Sca(dt/24.)*(Sca(9.)*A->value((i)*dt)*R + Sca(19.)*A->value((i-1)*dt)*Rk - Sca(5.)*A->value((i-2)*dt)*Rk_1 + A->value((i-3)*dt)*Rk_2);
 
         Rk_3 = Rk_2;
         Rk_2 = Rk_1;
