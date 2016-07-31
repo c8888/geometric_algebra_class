@@ -21,16 +21,16 @@ int main() {
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
 
-    int N = 40000;
+    int N = 400;
     double dt=1E-12;
     Vec S0(0,0,1);
     Rot R0(1,0,0,0);
 
-    /*
-    emr->calc(dt, N, S0, R0);
-    emr->timing();
-    emr->saveTR("TRfirst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
-    emr->saveTS("TSfirt.dat");
+/*
+    euler->calc(dt, N, S0, R0);
+    euler->timing();
+    euler->saveTR("TRfirst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    euler->saveTS("TSfirt.dat");
 
     rodrConst->calc(dt, N, S0, R0);
     rodrConst->timing();
@@ -77,6 +77,7 @@ int main() {
 
     eulerConventRescaling->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     eulerConventRescaling->saveError("Error2eulerConventRescalingConst.dat");
+     
 
     delete euler;
     delete emr1;
