@@ -198,3 +198,38 @@ void AdamsMulton::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
 }
 
+void EulerMethodConvent::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+
+    for(int i = 0; i<N; i++){
+        Vec Bfield(A->value(i*dt)[2], -A->value(i*dt)[1],  A->value(i*dt)[0]);
+        s += (s^Bfield).dual() * dt * 2;
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R0T)));
+    }
+
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
+
+void EulerMethodConventRescaling::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+
+    for(int i = 0; i<N; i++){
+        Vec Bfield(A->value(i*dt)[2], -A->value(i*dt)[1],  A->value(i*dt)[0]);
+        s += (s^Bfield).dual() * dt * 2;
+        s = s*(1/s.norm());
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R0T)));
+    }
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}

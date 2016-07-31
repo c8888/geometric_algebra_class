@@ -57,7 +57,17 @@ public:
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
+class EulerMethodConvent: public EQ {
+public:
+    EulerMethodConvent(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
+class EulerMethodConventRescaling: public EQ {
+public:
+    EulerMethodConventRescaling(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
 
 #endif //GEOMETRIC_ALGEBRA_CLASSES_NUMALGO_H
