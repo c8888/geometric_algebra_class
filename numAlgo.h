@@ -82,4 +82,16 @@ public:
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
+class MilneCorrected: public EQ {
+public:
+    MilneCorrected(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
+
+class Milne: public EQ {
+public:
+    Milne(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
+
 #endif //GEOMETRIC_ALGEBRA_CLASSES_NUMALGO_H
