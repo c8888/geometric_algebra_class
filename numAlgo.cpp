@@ -300,3 +300,94 @@ void Adams::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
     set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
 }
+
+void MilneCorrected::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+    Pss I =Pss(1);
+
+    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rk_3 = R0T;
+    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
+    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
+    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
+
+    s = Rk_3*S0T*(~Rk_3);
+    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk_2*S0T*(~Rk_2);
+    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk_1*S0T*(~Rk_1);
+    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk*S0T*(~Rk);
+    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+
+    for(int i=4; i<N; i++) {
+        R = Rk_3 + Sca(4.*dt/3.)*(Sca(2.)*A->value((i-3)*dt)*Rk_2 - A->value((i-2)*dt)*Rk_1 + Sca(2.)*A->value((i-1)*dt)*Rk);
+        R = Rk_1 + Sca(dt/3.)*(A->value((i-2)*dt)*Rk_1 + Sca(4.)*A->value((i-1)*dt)*Rk + A->value(i*dt)*R);
+
+        Rk_3 = Rk_2;
+        Rk_2 = Rk_1;
+        Rk_1 = Rk;
+
+        s = R*S0T*(~R);
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    }
+
+
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
+
+void Milne::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+    Pss I =Pss(1);
+
+    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rk_3 = R0T;
+    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
+    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
+    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
+
+    s = Rk_3*S0T*(~Rk_3);
+    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk_2*S0T*(~Rk_2);
+    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk_1*S0T*(~Rk_1);
+    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+    s = Rk*S0T*(~Rk);
+    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+
+
+    for(int i=4; i<N; i++) {
+        R = Rk_3 + Sca(4.*dt/3.)*(Sca(2.)*A->value((i-3)*dt)*Rk_2 - A->value((i-2)*dt)*Rk_1 + Sca(2.)*A->value((i-1)*dt)*Rk);
+
+        Rk_3 = Rk_2;
+        Rk_2 = Rk_1;
+        Rk_1 = Rk;
+
+        s = R*S0T*(~R);
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    }
+
+
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
