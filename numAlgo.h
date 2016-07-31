@@ -57,7 +57,41 @@ public:
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
+class EulerMethodConvent: public EQ {
+public:
+    EulerMethodConvent(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
+class EulerMethodConventRescaling: public EQ {
+public:
+    EulerMethodConventRescaling(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
+class EulerHeunMethodRotor: public EQ {
+public:
+    EulerHeunMethodRotor(Afun* Af): EQ(Af){} //always include this line
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //erase data, fill data with new solution, change time
+    //these two lines followed by definition of void calc() should be in every newly implemented method
+};
+
+class Adams: public EQ {
+public:
+    Adams(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
+
+class MilneCorrected: public EQ {
+public:
+    MilneCorrected(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
+
+class Milne: public EQ {
+public:
+    Milne(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
 
 #endif //GEOMETRIC_ALGEBRA_CLASSES_NUMALGO_H
