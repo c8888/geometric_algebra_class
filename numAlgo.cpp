@@ -35,26 +35,6 @@ void EulerMethodRotor::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R
     set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
 }
 
-void EulerHeunMethodRotor::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
-    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
-    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
-
-    Vec s = S0T;
-    Rot R = R0T;
-    Rot R0;
-
-    for(int i = 1; i<=N; i++){
-        R0=R;
-        R += (A->value(i*dt)) * R * dt; //A(T) IS THE FUNCTION RETURNING BIVECTOR SO NO NEED TO MULTIPLY IT BY PSEUDOSCALAR. YOU CAN ACCESS IT HERE.
-        R = R0 + Sca(dt/2.)*(A->value(i*dt)*R0+A->value((i+1)*dt)*R);
-        s = R * S0T * (~R);
-        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
-    }
-
-    std::clock_t c_end = std::clock();
-    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
-    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
-}
 
 void RungeKutta4thMethodRotor::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
@@ -219,6 +199,63 @@ void AdamsMulton::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
 }
 
+void EulerMethodConvent::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+
+    for(int i = 0; i<N; i++){
+        Vec Bfield(A->value(i*dt)[2], -A->value(i*dt)[1],  A->value(i*dt)[0]);
+        s += (s^Bfield).dual() * dt * 2;
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R0T)));
+    }
+
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
+
+void EulerMethodConventRescaling::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+
+    for(int i = 0; i<N; i++){
+        Vec Bfield(A->value(i*dt)[2], -A->value(i*dt)[1],  A->value(i*dt)[0]);
+        s += (s^Bfield).dual() * dt * 2;
+        s = s*(1/s.norm());
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R0T)));
+    }
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
+
+void EulerHeunMethodRotor::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
+    std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
+    erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
+
+    Vec s = S0T;
+    Rot R = R0T;
+    Rot R0;
+
+    for(int i = 1; i<=N; i++){
+        R0=R;
+        R += (A->value(i*dt)) * R * dt; //A(T) IS THE FUNCTION RETURNING BIVECTOR SO NO NEED TO MULTIPLY IT BY PSEUDOSCALAR. YOU CAN ACCESS IT HERE.
+        R = R0 + Sca(dt/2.)*(A->value(i*dt)*R0+A->value((i+1)*dt)*R);
+        s = R * S0T * (~R);
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    }
+
+    std::clock_t c_end = std::clock();
+    set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
+    set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
+}
+
 void Adams::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     std::clock_t c_start = std::clock(); //ADD THIS LINE TO EVERY FUNCTION HERE
     erase(); //THIS LINE IS OBLIGATORY FOR EVERY METHOD!!
@@ -263,4 +300,3 @@ void Adams::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     set_time(1000.0 * (c_end-c_start) / CLOCKS_PER_SEC); //set time of executions in miliseconds
     set_N(N); //ADD THESE THREE LINES TO EVERY FUNCTION HERE
 }
-
