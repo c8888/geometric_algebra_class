@@ -8,20 +8,22 @@ using namespace std;
 using namespace vsr::ega;
 
 int main() {
-    EulerMethodRotor* euler = new EulerMethodRotor(new Afun2); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
-    EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun2);
-    EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun2);
-    EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun2);
-    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun2);
-    RodriguesFormula* rodr = new RodriguesFormula(new Afun2);
-    AdamsMulton* Adm = new AdamsMulton(new Afun2);
-    EulerMethodConvent* eulerConvent = new EulerMethodConvent(new Afun2);
-    EulerMethodConventRescaling* eulerConventRescaling = new EulerMethodConventRescaling(new Afun2);
+    EulerMethodRotor* euler = new EulerMethodRotor(new Afun1); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
+    EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun1);
+    EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun1);
+    EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun1);
+    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun1);
+    RodriguesFormula* rodr = new RodriguesFormula(new Afun1);
+    AdamsMulton* Adm = new AdamsMulton(new Afun1);
+    EulerMethodConvent* eulerConvent = new EulerMethodConvent(new Afun1);
+    EulerMethodConventRescaling* eulerConventRescaling = new EulerMethodConventRescaling(new Afun1);
+    Milne* milne = new Milne(new Afun1);
+    MilneCorrected* milnecorr = new MilneCorrected(new Afun1);
 
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
 
-    int N = 400;
+    int N = 1000;
     double dt=1E-12;
     Vec S0(0,0,1);
     Rot R0(1,0,0,0);
@@ -77,8 +79,86 @@ int main() {
 
     eulerConventRescaling->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     eulerConventRescaling->saveError("Error2eulerConventRescalingConst.dat");
-     
 
+    milne->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milne->saveError("Error2milneConst.dat");
+
+    milnecorr->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milnecorr->saveError("Error2milneCorrectedConst.dat");
+
+/*
+    euler->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    euler->saveError("Error2eulerConst.dat");
+
+    emr1->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr1->saveError("Error2euler1Const.dat");
+
+    emr2->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr2->saveError("Error2euler2Const.dat");
+
+
+    emr3->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr3->saveError("Error2euler3Const.dat");
+
+
+    runge->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    runge->saveError("Error2rungeConst.dat");
+
+    rodr->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    rodr->saveError("Error2rodrConst.dat");
+
+    Adm->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    Adm->saveError("Error2adamsConst.dat");
+
+    eulerConvent->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    eulerConvent->saveError("Error2eulerConventConst.dat");
+
+    eulerConventRescaling->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    eulerConventRescaling->saveError("Error2eulerConventRescalingConst.dat");
+
+    milne->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milne->saveError("Error2milneConst.dat");
+
+    milnecorr->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milnecorr->saveError("Error2milneCorrectedConst.dat");
+*/
+
+/*
+    euler->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    euler->saveError("Error2eulerConst.dat");
+
+    emr1->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr1->saveError("Error2euler1Const.dat");
+
+    emr2->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr2->saveError("Error2euler2Const.dat");
+
+
+    emr3->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    emr3->saveError("Error2euler3Const.dat");
+
+
+    runge->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    runge->saveError("Error2rungeConst.dat");
+
+    rodr->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    rodr->saveError("Error2rodrConst.dat");
+
+    Adm->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    Adm->saveError("Error2adamsConst.dat");
+
+    eulerConvent->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    eulerConvent->saveError("Error2eulerConventConst.dat");
+
+    eulerConventRescaling->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    eulerConventRescaling->saveError("Error2eulerConventRescalingConst.dat");
+
+    milne->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milne->saveError("Error2milneConst.dat");
+
+    milnecorr->calcError4(dtmin, dtmax, N, logarithm_base, S0, R0);
+    milnecorr->saveError("Error2milneCorrectedConst.dat");
+*/
     delete euler;
     delete emr1;
     delete emr2;
@@ -88,6 +168,8 @@ int main() {
     delete Adm;
     delete eulerConvent;
     delete eulerConventRescaling;
+    delete milne;
+    delete milnecorr;
 
     return 0;
 }

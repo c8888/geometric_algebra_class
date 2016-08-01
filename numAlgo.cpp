@@ -71,7 +71,7 @@ void EulerMethodRotorRescaling1::calc(double dt, int N, vsr::ega::Vec S0T, vsr::
 
     for(int i = 0; i<N; i++){
         R += (A->value(i*dt)) * R * dt;
-        R = R*Sca(1/((R*(~R))[0]));
+        R = R*Sca(1/sqrt((R*(~R))[0]));
         s = R * S0T * (~R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
     }
@@ -106,7 +106,7 @@ void EulerMethodRotorRescaling3::calc(double dt, int N, vsr::ega::Vec S0T, vsr::
 
     for(int i = 0; i<N; i++){
         R += (A->value(i*dt)) * R * dt;
-        R = R*Sca(1/((R*(~R))[0]));
+        R = R*Sca(1/sqrt((R*(~R))[0]));
         s = R * S0T * (!R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
     }

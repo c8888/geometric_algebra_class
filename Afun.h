@@ -28,7 +28,7 @@ public:
     vsr::ega::Rot exactSol (double t, vsr::ega::Rot R0);
 private:
     const double B0 = 1;
-    const double B1 = 1;
+    const double B1 = 10;
     const double gamma = 1;
     const double w = 1;
     vsr::ega::Pss I = vsr::ega::Pss(1);
