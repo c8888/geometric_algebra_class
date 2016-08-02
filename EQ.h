@@ -29,6 +29,7 @@ public:
     void calcError2(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //acos(angle between S and S_exact)
     void calcError3(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //max(abs(1-R(~R))), adds pairs of dt and error measurement into data d
     void calcError4(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //min(cos(angle between S and S_exact)), adds pairs of dt and error measurement into data d
+    void calcError5(double dtmin, double dtmax, int N, double logarithm_base, vsr::ega::Vec S0T, vsr::ega::Rot R0T); //acos(angle between S and S_exact) without dividing by R(~R)
     void timing(); //returns last execution time and N
     void push_back(std::pair< double, std::pair<vsr::ega::Vec, vsr::ega::Rot> > ); //add t,S,R with this
     void push_back(std::pair<double, double>); //add error with this
