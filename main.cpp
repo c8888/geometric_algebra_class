@@ -12,7 +12,7 @@ int main() {
     EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun1);
     EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun1);
     EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun1);
-    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun1); //works
+    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun1); //works ok
     RodriguesFormula* rodr = new RodriguesFormula(new Afun1); //works
     AdamsMulton* Adm = new AdamsMulton(new Afun1); //incorrect
     EulerMethodConvent* eulerConvent = new EulerMethodConvent(new Afun1);
@@ -23,7 +23,7 @@ int main() {
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
 
-    int N = 100000;
+    int N = 1000;
     double dt=1E-5;
     Vec S0(0,0,1);
     Rot R0(1,0,0,0);
@@ -37,10 +37,27 @@ int main() {
     rodr->timing();
     rodr->saveTR("TRrodrConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
     rodr->saveTS("TSrodrConst.dat");
-    rodr->calc(dt, N, S0, R0);
-    rodr->timing();
-    rodr->saveTR("TRAdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
-    rodr->saveTS("TSAdamsConst.dat");
+
+    Adm->calc(dt, N, S0, R0);
+    Adm->timing();
+    Adm->saveTR("TRAdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    Adm->saveTS("TSAdamsConst.dat");
+
+    runge->calc(dt, N, S0, R0);
+    runge->timing();
+    runge->saveTR("TRrungeConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    runge->saveTS("TSrungeConst.dat");
+
+    emr1->calc(dt, N, S0, R0);
+    emr1->timing();
+    emr1->saveTR("TRemr1Const.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    emr1->saveTS("TSemr1Const.dat");
+
+    eulerConvent->calc(dt, N, S0, R0);
+    eulerConvent->timing();
+    eulerConvent->saveTR("TReulerConventConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    eulerConvent->saveTS("TSeulerConventConst.dat");
+
 
 
 
@@ -48,7 +65,7 @@ int main() {
     double dtmin = 1E-5;
     double dtmax = 5;
     double logarithm_base = 1.1; //increment od dt for next step, i.e. dt *= logarithm_base
-/*
+
     euler->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     euler->saveError("Error2eulerConst.dat");
 
@@ -83,7 +100,7 @@ int main() {
 
     milnecorr->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     milnecorr->saveError("Error2milneCorrectedConst.dat");
-/*
+
 /*
     euler->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
     euler->saveError("Error2eulerConst.dat");
