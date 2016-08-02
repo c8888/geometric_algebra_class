@@ -13,17 +13,15 @@ using namespace std;
 using namespace vsr::ega;
 
 Biv Afun1::value(double t) {
-    const double gamma = 2.675E8;
     Pss I(1);
-    Vec B(0, gamma, 0);
+    Vec B(0, gamma/2, 0);
     return B*I; //ALREADY INCLUDES THE PSEUDOSCALAR FACTOR
 }
 
 Rot Afun1::exactSol(double t, vsr::ega::Rot R0){
-    const double gamma = 2.675E8;
     Pss I(1);
-    Vec B(0,gamma,0);
-    Rot Rtmp = Sca(cos((I*B*t).norm())) + (I*B*t)*(1/(I*B*t).norm())*sin((I*B*t).norm());
+    Vec B(0,gamma/2,0);
+    Rot Rtmp = Sca(cos((B*I).norm()*t)) + (B*I)*Sca((1/(B*I).norm())*sin((B*I).norm()*t));
     return Rtmp;
 }
 

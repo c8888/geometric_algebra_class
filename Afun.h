@@ -20,6 +20,7 @@ class Afun1: public Afun {
 public:
     vsr::ega::Biv value(double t);
     vsr::ega::Rot exactSol (double t, vsr::ega::Rot R0);
+    const double gamma = 1;
 };
 
 class Afun2: public Afun {
@@ -28,7 +29,7 @@ public:
     vsr::ega::Rot exactSol (double t, vsr::ega::Rot R0);
 private:
     const double B0 = 1;
-    const double B1 = 1;
+    const double B1 = 2;
     const double gamma = 1;
     const double w = 1;
     vsr::ega::Pss I = vsr::ega::Pss(1);
