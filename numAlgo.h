@@ -106,4 +106,10 @@ public:
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
+class ExactSolution: public EQ {
+public:
+    ExactSolution(Afun* Af): EQ(Af){}
+    void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
+};
+
 #endif //GEOMETRIC_ALGEBRA_CLASSES_NUMALGO_H

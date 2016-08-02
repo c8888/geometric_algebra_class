@@ -8,31 +8,34 @@ using namespace std;
 using namespace vsr::ega;
 
 int main() {
-    EulerMethodRotor* euler = new EulerMethodRotor(new Afun1); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
-    EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun1);
-    EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun1);
-    EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun1);
-    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun1); //works ok
-    RodriguesFormula* rodr = new RodriguesFormula(new Afun1); //works
-    AdamsMulton* Adm = new AdamsMulton(new Afun1); //incorrect
-    EulerMethodConvent* eulerConvent = new EulerMethodConvent(new Afun1);
-    EulerMethodConventRescaling* eulerConventRescaling = new EulerMethodConventRescaling(new Afun1);
-    Milne* milne = new Milne(new Afun1);
-    MilneCorrected* milnecorr = new MilneCorrected(new Afun1);
+    EulerMethodRotor* euler = new EulerMethodRotor(new Afun2); //how to create new object. It has Afun1 as A(t) and EulerMethodRotor as numerical method.
+    EulerMethodRotorRescaling1* emr1 = new EulerMethodRotorRescaling1(new Afun2);
+    EulerMethodRotorRescaling2* emr2 = new EulerMethodRotorRescaling2(new Afun2);
+    EulerMethodRotorRescaling3* emr3 = new EulerMethodRotorRescaling3(new Afun2);
+    RungeKutta4thMethodRotor* runge = new RungeKutta4thMethodRotor(new Afun2); //works ok
+    RodriguesFormula* rodr = new RodriguesFormula(new Afun2); //works
+    AdamsMulton* Adm = new AdamsMulton(new Afun2); //works
+    EulerMethodConvent* eulerConvent = new EulerMethodConvent(new Afun2);
+    EulerMethodConventRescaling* eulerConventRescaling = new EulerMethodConventRescaling(new Afun2);
+    Milne* milne = new Milne(new Afun2);
+    MilneCorrected* milnecorr = new MilneCorrected(new Afun2);
+    Adams* Ad = new Adams(new Afun2); //works
+    ExactSolution* ex = new ExactSolution(new Afun2); //works
 
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
 
-    int N = 1000;
-    double dt=1E-5;
+    int N = 10000;
+    double dt=1E-1;
     Vec S0(0,0,1);
     Rot R0(1,0,0,0);
 
-
+/*
     euler->calc(dt, N, S0, R0);
     euler->timing();
     euler->saveTR("TRfirst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
     euler->saveTS("TSfirt.dat");
+
     rodr->calc(dt, N, S0, R0);
     rodr->timing();
     rodr->saveTR("TRrodrConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
@@ -40,8 +43,8 @@ int main() {
 
     Adm->calc(dt, N, S0, R0);
     Adm->timing();
-    Adm->saveTR("TRAdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
-    Adm->saveTS("TSAdamsConst.dat");
+    Adm->saveTR("TRadamsMConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    Adm->saveTS("TSadamsMConst.dat");
 
     runge->calc(dt, N, S0, R0);
     runge->timing();
@@ -58,14 +61,28 @@ int main() {
     eulerConvent->saveTR("TReulerConventConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
     eulerConvent->saveTS("TSeulerConventConst.dat");
 
+    eulerConvent->calc(dt, N, S0, R0);
+    eulerConvent->timing();
+    eulerConvent->saveTR("TReulerConventConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    eulerConvent->saveTS("TSeulerConventConst.dat");
 
+    Ad->calc(dt, N, S0, R0);
+    Ad->timing();
+    Ad->saveTR("TRdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    Ad->saveTS("TSadamsConst.dat");
+
+    ex->calc(dt, N, S0, R0);
+    ex->timing();
+    ex->saveTR("TRexactConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    ex->saveTS("TSexactConst.dat");
+*/
 
 
     //CALCULATE ERROR WITH ERROR MEASUREMENT
-    double dtmin = 1E-5;
-    double dtmax = 5;
+    double dtmin = 1E-15;
+    double dtmax = 10;
     double logarithm_base = 1.1; //increment od dt for next step, i.e. dt *= logarithm_base
-
+/*
     euler->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     euler->saveError("Error2eulerConst.dat");
 
@@ -87,7 +104,7 @@ int main() {
     rodr->saveError("Error2rodrConst.dat");
 
     Adm->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
-    Adm->saveError("Error2adamsConst.dat");
+    Adm->saveError("Error2adamsMConst.dat");
 
     eulerConvent->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     eulerConvent->saveError("Error2eulerConventConst.dat");
@@ -101,7 +118,13 @@ int main() {
     milnecorr->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
     milnecorr->saveError("Error2milneCorrectedConst.dat");
 
-/*
+    Ad->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    Ad->saveError("Error2adamsConst.dat");
+
+    ex->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+    ex->saveError("Error2exactConst.dat");
+*/
+
     euler->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
     euler->saveError("Error2eulerConst.dat");
 
@@ -123,7 +146,7 @@ int main() {
     rodr->saveError("Error2rodrConst.dat");
 
     Adm->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
-    Adm->saveError("Error2adamsConst.dat");
+    Adm->saveError("Error2adamsMConst.dat");
 
     eulerConvent->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
     eulerConvent->saveError("Error2eulerConventConst.dat");
@@ -136,7 +159,10 @@ int main() {
 
     milnecorr->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
     milnecorr->saveError("Error2milneCorrectedConst.dat");
-*/
+
+    Ad->calcError1(dtmin, dtmax, N, logarithm_base, S0, R0);
+    Ad->saveError("Error2adamsConst.dat");
+
 
 /*
     euler->calcError3(dtmin, dtmax, N, logarithm_base, S0, R0);
@@ -185,6 +211,8 @@ int main() {
     delete eulerConventRescaling;
     delete milne;
     delete milnecorr;
+    delete Ad;
+    delete ex;
 
     return 0;
 }

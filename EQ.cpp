@@ -54,7 +54,7 @@ void EQ::calcError1(double dtmin, double dtmax, int N, double logarithm_base, Ve
         for(int i = 0; i < d.size(); i++){
             if( abs(1-d.getS(i).norm()) > diff ) diff = abs(1-d.getS(i).norm());
         }
-        push_back(pair<double, double> (log10(dt), log10(diff)));
+        push_back(pair<double, double> (log10(dt), log10(diff/dt)));
         dt *= logarithm_base;
     }
 }
@@ -70,10 +70,10 @@ void EQ::calcError2(double dtmin, double dtmax, int N, double logarithm_base, Ve
         for(unsigned long i=0; i<d.size(); i++){
             Rot Rexact = A->exactSol(d.getT(i), R0T); //getT(i) is the time at which getS(i) is specified
             Vec Sexact = Rexact * S0T * (~Rexact);
-            double tmp = acos((d.getS(i)<=Sexact)[0]/(d.getR(i)*(~(d.getR(i))))[0]);
+            double tmp = acos((d.getS(i)<=Sexact)[0]/d.getS(i).norm()/Sexact.norm());
             if(abs(tmp)>abs(theta)) theta = abs(tmp);
         }
-        push_back(pair<double, double> (log10(dt), log10(theta)));
+        push_back(pair<double, double> (log10(dt), log10(theta/dt)));
         dt *= logarithm_base;
     }
 }

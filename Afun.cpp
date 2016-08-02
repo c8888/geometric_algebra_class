@@ -21,7 +21,9 @@ Biv Afun1::value(double t) {
 Rot Afun1::exactSol(double t, vsr::ega::Rot R0){
     Pss I(1);
     Vec B(0,gamma/2,0);
-    Rot Rtmp = Sca(cos((B*I).norm()*t)) + (B*I)*Sca((1/(B*I).norm())*sin((B*I).norm()*t));
+    Biv BB = (B*I)*Sca((1/(B*I).norm())*sin((B*I).norm()*t));
+    Rot Rtmp( cos((B*I).norm()*t), BB[0], BB[1], BB[2]);
+
     return Rtmp;
 }
 
