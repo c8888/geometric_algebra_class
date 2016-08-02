@@ -42,9 +42,10 @@ public:
     void saveTR(const char* filename);
     void saveError(const char* filename);
 
+    data d;
     Afun *A;
 private:
-    data d;
+
     double time; //store last time of N iterations execution
     int N; //store last number of iterations
 };

@@ -37,10 +37,14 @@ int main() {
     rodr->timing();
     rodr->saveTR("TRrodrConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
     rodr->saveTS("TSrodrConst.dat");
-    rodr->calc(dt, N, S0, R0);
-    rodr->timing();
-    rodr->saveTR("TRAdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
-    rodr->saveTS("TSAdamsConst.dat");
+    Adm->calc(dt, N, S0, R0);
+    Adm->timing();
+    Adm->saveTR("TRAdamsConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    Adm->saveTS("TSAdamsConst.dat");
+    milne->calc(dt, N, S0, R0);
+    milne->timing();
+    milne->saveTR("TRMilneConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
+    milne->saveTS("TSMilneConst.dat");
 
 
 
