@@ -160,33 +160,35 @@ void AdamsMulton::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     Vec s = S0T;
     Pss I =Pss(1);
 
-    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+    Rot R=R0T, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rot k1, k2, k3, k4;
+
+    for(int i = 1; i<4; i++){
+        k1 = f(A, i*dt, R) * dt;
+        k2 = f(A, i*dt + dt/2, R + k1*0.5) * dt;
+        k3 = f(A, i*dt + dt/2, R + k2*0.5) * dt;
+        k4 = f(A, i*dt + dt, R + k3) * dt;
+        R += (k1 + k2*2 + k3*2 + k4)/6;
+        s = R * S0T * (~R);
+
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //ADD NEXT POINT
+    }
 
     Rk_3 = R0T;
-    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
-    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
-    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
-
-    s = Rk_3*S0T*(~Rk_3);
-    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_2*S0T*(~Rk_2);
-    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_1*S0T*(~Rk_1);
-    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk*S0T*(~Rk);
-    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    Rk_2 = d.getR(0);
+    Rk_1 = d.getR(1);
+    Rk = d.getR(2);
 
 
-    for(int i=4; i<N; i++) {
+    for(int i=4; i<=N; i++) {
         R = Rk + Sca(dt/24.)*(Sca(55.)*A->value((i-1)*dt)*Rk - Sca(59.)*A->value((i-2)*dt)*Rk_1 + Sca(37.)*A->value((i-3)*dt)*Rk_2 - Sca(9.)*A->value((i-4)*dt)*Rk_3);
         R = Rk + Sca(dt/24.)*(Sca(9.)*A->value((i)*dt)*R + Sca(19.)*A->value((i-1)*dt)*Rk - Sca(5.)*A->value((i-2)*dt)*Rk_1 + A->value((i-3)*dt)*Rk_2);
 
         Rk_3 = Rk_2;
         Rk_2 = Rk_1;
         Rk_1 = Rk;
+        Rk = R;
 
         s = R*S0T*(~R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
@@ -263,32 +265,34 @@ void Adams::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     Vec s = S0T;
     Pss I =Pss(1);
 
-    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+    Rot R=R0T, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rot k1, k2, k3, k4;
+
+    for(int i = 1; i<4; i++){
+        k1 = f(A, i*dt, R) * dt;
+        k2 = f(A, i*dt + dt/2, R + k1*0.5) * dt;
+        k3 = f(A, i*dt + dt/2, R + k2*0.5) * dt;
+        k4 = f(A, i*dt + dt, R + k3) * dt;
+        R += (k1 + k2*2 + k3*2 + k4)/6;
+        s = R * S0T * (~R);
+
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //ADD NEXT POINT
+    }
 
     Rk_3 = R0T;
-    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
-    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
-    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
-
-    s = Rk_3*S0T*(~Rk_3);
-    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_2*S0T*(~Rk_2);
-    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_1*S0T*(~Rk_1);
-    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk*S0T*(~Rk);
-    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    Rk_2 = d.getR(0);
+    Rk_1 = d.getR(1);
+    Rk = d.getR(2);
 
 
-    for(int i=4; i<N; i++) {
+    for(int i=4; i<=N; i++) {
         R = Rk + Sca(dt/24.)*(Sca(55.)*A->value((i-1)*dt)*Rk - Sca(59.)*A->value((i-2)*dt)*Rk_1 + Sca(37.)*A->value((i-3)*dt)*Rk_2 - Sca(9.)*A->value((i-4)*dt)*Rk_3);
 
         Rk_3 = Rk_2;
         Rk_2 = Rk_1;
         Rk_1 = Rk;
+        Rk = R;
 
         s = R*S0T*(~R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
@@ -308,33 +312,35 @@ void MilneCorrected::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T
     Vec s = S0T;
     Pss I =Pss(1);
 
-    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+    Rot R=R0T, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rot k1, k2, k3, k4;
+
+    for(int i = 1; i<4; i++){
+        k1 = f(A, i*dt, R) * dt;
+        k2 = f(A, i*dt + dt/2, R + k1*0.5) * dt;
+        k3 = f(A, i*dt + dt/2, R + k2*0.5) * dt;
+        k4 = f(A, i*dt + dt, R + k3) * dt;
+        R += (k1 + k2*2 + k3*2 + k4)/6;
+        s = R * S0T * (~R);
+
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //ADD NEXT POINT
+    }
 
     Rk_3 = R0T;
-    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
-    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
-    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
-
-    s = Rk_3*S0T*(~Rk_3);
-    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_2*S0T*(~Rk_2);
-    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_1*S0T*(~Rk_1);
-    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk*S0T*(~Rk);
-    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    Rk_2 = d.getR(0);
+    Rk_1 = d.getR(1);
+    Rk = d.getR(2);
 
 
-    for(int i=4; i<N; i++) {
+    for(int i=4; i<=N; i++) {
         R = Rk_3 + Sca(4.*dt/3.)*(Sca(2.)*A->value((i-3)*dt)*Rk_2 - A->value((i-2)*dt)*Rk_1 + Sca(2.)*A->value((i-1)*dt)*Rk);
         R = Rk_1 + Sca(dt/3.)*(A->value((i-2)*dt)*Rk_1 + Sca(4.)*A->value((i-1)*dt)*Rk + A->value(i*dt)*R);
 
         Rk_3 = Rk_2;
         Rk_2 = Rk_1;
         Rk_1 = Rk;
+        Rk = R;
 
         s = R*S0T*(~R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT
@@ -354,32 +360,34 @@ void Milne::calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T) {
     Vec s = S0T;
     Pss I =Pss(1);
 
-    Rot R, Rk, Rk_1, Rk_2, Rk_3;
+    Rot R=R0T, Rk, Rk_1, Rk_2, Rk_3;
+
+    Rot k1, k2, k3, k4;
+
+    for(int i = 1; i<4; i++){
+        k1 = f(A, i*dt, R) * dt;
+        k2 = f(A, i*dt + dt/2, R + k1*0.5) * dt;
+        k3 = f(A, i*dt + dt/2, R + k2*0.5) * dt;
+        k4 = f(A, i*dt + dt, R + k3) * dt;
+        R += (k1 + k2*2 + k3*2 + k4)/6;
+        s = R * S0T * (~R);
+
+        push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //ADD NEXT POINT
+    }
 
     Rk_3 = R0T;
-    Rk_2 = Rk_3 + Sca(dt)*power(A->value(1*dt)*I,1)*Rk_3 + Sca(dt*dt/2.)*power(A->value(1*dt)*I,2)*Rk_3 + Sca(dt*dt*dt/6.)*power(A->value(1*dt)*I,3)*Rk_3 + Sca(dt*dt*dt*dt/24.)*power(A->value(1*dt)*I,4)*Rk_3 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(1*dt)*I,5)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(1*dt)*I,6)*Rk_3 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(1*dt)*I,7)*Rk_3;
-    Rk_1 = Rk_2 + Sca(dt)*power(A->value(2*dt)*I,1)*Rk_2 + Sca(dt*dt/2.)*power(A->value(2*dt)*I,2)*Rk_2 + Sca(dt*dt*dt/6.)*power(A->value(2*dt)*I,3)*Rk_2 + Sca(dt*dt*dt*dt/24.)*power(A->value(2*dt)*I,4)*Rk_2 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(2*dt)*I,5)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(2*dt)*I,6)*Rk_2 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(2*dt)*I,7)*Rk_2;
-    Rk = Rk_1 + Sca(dt)*power(A->value(3*dt)*I,1)*Rk_1 + Sca(dt*dt/2.)*power(A->value(3*dt)*I,2)*Rk_1 + Sca(dt*dt*dt/6.)*power(A->value(3*dt)*I,3)*Rk_1 + Sca(dt*dt*dt*dt/24.)*power(A->value(3*dt)*I,4)*Rk_1 + Sca(dt*dt*dt*dt*dt/120.)*power(A->value(3*dt)*I,5)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt/720.)*power(A->value(3*dt)*I,6)*Rk_1 + Sca(dt*dt*dt*dt*dt*dt*dt/5040.)*power(A->value(3*dt)*I,7)*Rk_1;
-
-    s = Rk_3*S0T*(~Rk_3);
-    push_back(make_pair< double, pair<Vec, Rot> >(0*dt, pair<Vec, Rot>(s, Rk_3))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_2*S0T*(~Rk_2);
-    push_back(make_pair< double, pair<Vec, Rot> >(1*dt, pair<Vec, Rot>(s, Rk_2))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk_1*S0T*(~Rk_1);
-    push_back(make_pair< double, pair<Vec, Rot> >(2*dt, pair<Vec, Rot>(s, Rk_1))); //EXAMPLE OF HOW TO ADD NEXT POINT
-
-    s = Rk*S0T*(~Rk);
-    push_back(make_pair< double, pair<Vec, Rot> >(3*dt, pair<Vec, Rot>(s, Rk))); //EXAMPLE OF HOW TO ADD NEXT POINT
+    Rk_2 = d.getR(0);
+    Rk_1 = d.getR(1);
+    Rk = d.getR(2);
 
 
-    for(int i=4; i<N; i++) {
+    for(int i=4; i<=N; i++) {
         R = Rk_3 + Sca(4.*dt/3.)*(Sca(2.)*A->value((i-3)*dt)*Rk_2 - A->value((i-2)*dt)*Rk_1 + Sca(2.)*A->value((i-1)*dt)*Rk);
 
         Rk_3 = Rk_2;
         Rk_2 = Rk_1;
         Rk_1 = Rk;
+        Rk = R;
 
         s = R*S0T*(~R);
         push_back(make_pair< double, pair<Vec, Rot> >(i*dt, pair<Vec, Rot>(s, R))); //EXAMPLE OF HOW TO ADD NEXT POINT

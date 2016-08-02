@@ -54,6 +54,9 @@ public:
 class AdamsMulton: public EQ {
 public:
     AdamsMulton(Afun* Af): EQ(Af){}
+    auto f(Afun* Af, double t, const vsr::ega::Rot& R){
+        return Af->value(t)*R;
+    } //simplifies the coding
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
@@ -79,18 +82,27 @@ public:
 class Adams: public EQ {
 public:
     Adams(Afun* Af): EQ(Af){}
+    auto f(Afun* Af, double t, const vsr::ega::Rot& R){
+        return Af->value(t)*R;
+    } //simplifies the coding
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
 class MilneCorrected: public EQ {
 public:
     MilneCorrected(Afun* Af): EQ(Af){}
+    auto f(Afun* Af, double t, const vsr::ega::Rot& R){
+        return Af->value(t)*R;
+    } //simplifies the coding
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
 class Milne: public EQ {
 public:
     Milne(Afun* Af): EQ(Af){}
+    auto f(Afun* Af, double t, const vsr::ega::Rot& R){
+        return Af->value(t)*R;
+    } //simplifies the coding
     void calc(double dt, int N, vsr::ega::Vec S0T, vsr::ega::Rot R0T);
 };
 
