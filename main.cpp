@@ -5,7 +5,7 @@
 #include "data.h"
 
 
-#define cE calcError1
+#define cE calcError3
 #define af Afun2
 
 
@@ -30,10 +30,57 @@ int main() {
     //CALCULATE THE ROTOR AND SPIN IN TIME
 
 
-    int N = 10000;
+    double N = 100;
     double dt=1E-1;
     Vec S0(0,0,1);
     Rot R0(1,0,0,0);
+
+
+    //CALCULATE ERROR WITH ERROR MEASUREMENT
+    double dtmin = 1E-5;
+    double dtmax = 1E1;
+    double logarithm_base = 1.1; //increment od dt for next step, i.e. dt *= logarithm_base
+
+        euler->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        euler->saveError("T100_Afun2_Error3/Error2eulerConst.dat");
+
+        emr1->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        emr1->saveError("T100_Afun2_Error3/Error2euler1Const.dat");
+
+        //emr2->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        //emr2->saveError("T100_Afun1_Error3/Error2euler2Const.dat");
+
+        //emr3->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        //emr3->saveError("T100_Afun1_Error3/Error2euler3Const.dat");
+
+        runge->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        runge->saveError("T100_Afun2_Error3/Error2rungeConst.dat");
+
+        rodr->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        rodr->saveError("T100_Afun2_Error3/Error2rodrConst.dat");
+
+        Adm->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        Adm->saveError("T10_Afun2_Error3/Error2adamsMConst.dat");
+
+        eulerConvent->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        eulerConvent->saveError("T100_Afun2_Error3/Error2eulerConventConst.dat");
+
+        eulerConventRescaling->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        eulerConventRescaling->saveError("T100_Afun2_Error3/Error2eulerConventRescalingConst.dat");
+
+        milne->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        milne->saveError("T100_Afun2_Error3/Error2milneConst.dat");
+
+        milnecorr->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        milnecorr->saveError("T100_Afun2_Error3/Error2milneCorrectedConst.dat");
+
+        Ad->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
+        Ad->saveError("T100_Afun2_Error3/Error2adamsConst.dat");
+
+        ex->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
+        ex->saveError("T100_Afun2_Error3/Error2exactConst.dat");
+
+
 
 /*
     euler->calc(dt, N, S0, R0);
@@ -81,55 +128,6 @@ int main() {
     ex->saveTR("TRexactConst.dat"); //export to file. Filename should be known before compliation. It by far the simplest to type it before with keyboard. Overwrites th file.
     ex->saveTS("TSexactConst.dat");
 */
-
-
-    //CALCULATE ERROR WITH ERROR MEASUREMENT
-    double dtmin = 1E-15;
-    double dtmax = 10;
-    double logarithm_base = 1.1; //increment od dt for next step, i.e. dt *= logarithm_base
-
-    euler->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    euler->saveError("Error2eulerConst.dat");
-
-    emr1->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    emr1->saveError("Error2euler1Const.dat");
-
-    emr2->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    emr2->saveError("Error2euler2Const.dat");
-
-
-    emr3->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    emr3->saveError("Error2euler3Const.dat");
-
-
-    runge->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    runge->saveError("Error2rungeConst.dat");
-
-    rodr->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    rodr->saveError("Error2rodrConst.dat");
-
-    Adm->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    Adm->saveError("Error2adamsMConst.dat");
-
-    eulerConvent->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    eulerConvent->saveError("Error2eulerConventConst.dat");
-
-    eulerConventRescaling->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    eulerConventRescaling->saveError("Error2eulerConventRescalingConst.dat");
-
-    milne->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    milne->saveError("Error2milneConst.dat");
-
-    milnecorr->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    milnecorr->saveError("Error2milneCorrectedConst.dat");
-
-    Ad->cE(dtmin, dtmax, N, logarithm_base, S0, R0);
-    Ad->saveError("Error2adamsConst.dat");
-
-    ex->calcError2(dtmin, dtmax, N, logarithm_base, S0, R0);
-    ex->saveError("Error2exactConst.dat");
-
-
 
     delete euler;
     delete emr1;
